@@ -1,25 +1,32 @@
+import 'package:day_6_kismet/story_brain.dart';
 import 'package:flutter/material.dart';
 import 'story_brain.dart';
-import 'dart:io';
 
 void main() => runApp(MaterialApp(
       theme: ThemeData.dark(),
       home: KismetApp(),
-    ));
+    )
+);
+
+
 
 class KismetApp extends StatefulWidget {
+
   @override
   _KismetAppState createState() => _KismetAppState();
 }
 
-// TODO: Step 15 - Run your app and see if it works as expected
+
 class _KismetAppState extends State<KismetApp> {
-  // TODO: Step 6 - Create a storyBrain object and use it to get story title, choice1 and choice 2 and show them on the app by using at appropriate locations
-  StoryBrain storyBrain = StoryBrain();
+
+  List<Story> allStories = StoryData().stories;
+  Story currentStory;
+  int index = 0;
+
   @override
   Widget build(BuildContext context) {
+    currentStory = allStories[index];
     return Scaffold(
-      //TODO: Step 1 - Add background.png to this Container as a background image. (Remember to add it to pubspec.yaml)
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -35,8 +42,7 @@ class _KismetAppState extends State<KismetApp> {
               Expanded(
                 flex: 12,
                 child: Center(
-                  child: Text(
-                    storyBrain.getStory(),
+                  child: Text(currentStory.story,
                     style: TextStyle(
                       fontSize: 25.0,
                     ),
@@ -46,19 +52,16 @@ class _KismetAppState extends State<KismetApp> {
               Expanded(
                 flex: 2,
                 child: Visibility(
-                  visible: storyBrain.buttonShouldBeVisible(),
+
                   child: FlatButton(
                     onPressed: () {
-                      //Choice 1 made by user.
-                      //TODO: Step 9 - Call the nextStory() method from storyBrain and pass the number 1 as the choice made by the user, do the same for choice2 button and pass number 2 in that case
-
                       setState(() {
-                        storyBrain.nextStory(1);
+                        index = currentStory.choice1_result;
                       });
                     },
                     color: Colors.red,
                     child: Text(
-                      storyBrain.getChoice1(),
+                      currentStory.choice1,
                       style: TextStyle(
                         fontSize: 20.0,
                       ),
@@ -73,17 +76,17 @@ class _KismetAppState extends State<KismetApp> {
                 flex: 2,
                 //TODO: Step 14 - Use a Flutter Visibility Widget to wrap this FlatButton and set the "visible" property of the Visibility Widget to equal the output from the buttonShouldBeVisible() method in the storyBrain.
                 child: Visibility(
-                  visible: storyBrain.buttonShouldBeVisible(),
+                  visible: ending(index),
                   child: FlatButton(
                     onPressed: () {
                       //Choice 2 made by user.
                       setState(() {
-                        storyBrain.nextStory(2);
+                        index = currentStory.choice2_result;
                       });
                     },
                     color: Colors.blue,
                     child: Text(
-                      storyBrain.getChoice2(),
+                      currentStory.choice2,
                       style: TextStyle(
                         fontSize: 20.0,
                       ),
@@ -98,3 +101,5 @@ class _KismetAppState extends State<KismetApp> {
     );
   }
 }
+
+
